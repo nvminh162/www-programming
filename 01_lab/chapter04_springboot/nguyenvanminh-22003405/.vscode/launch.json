@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-Nguyenvanminh22003405Application<nguyenvanminh-22003405>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.nvminh162.nguyenvanminh.Nguyenvanminh22003405Application",
+            "projectName": "nguyenvanminh-22003405",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
