@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">Shopping DB</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/customers">Customers</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/products">Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/orders">Orders</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h2>Customer Details</h2>
+        
+        <div class="card">
+            <div class="card-body">
+                <p><strong>ID:</strong> <span th:text="${customer.id}"></span></p>
+                <p><strong>Name:</strong> <span th:text="${customer.name}"></span></p>
+                <p><strong>Customer Since:</strong> <span th:text="${#calendars.format(customer.customerSince, 'dd/MM/yyyy')}"></span></p>
+            </div>
+        </div>
+        
+        <h3 class="mt-4">Order History</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="order : ${customer.orders}">
+                    <td th:text="${order.id}"></td>
+                    <td th:text="${#calendars.format(order.date, 'dd/MM/yyyy')}"></td>
+                    <td>
+                        <a th:href="@{/orders/view/{id}(id=${order.id})}" class="btn btn-info btn-sm">View Order</a>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(customer.orders)}">
+                    <td colspan="3" class="text-center">No orders found</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <a href="/customers" class="btn btn-secondary mt-3">Back to List</a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
