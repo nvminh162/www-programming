@@ -44,20 +44,25 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
+                        // Guest: có thể truy cập trang chủ, đăng nhập, xem danh sách Product
                         .requestMatchers("/", "/css/**", "/js/**", "/images/**").permitAll()
-                        // Guest: có thể đăng ký tài khoản, xem danh sách Product
                         .requestMatchers("/login", "/logout").permitAll()
+                        .requestMatchers("/products", "/products/list").permitAll()
                         
-                        // Customer: xem danh sách Product, mua Product, Lưu Order, tra cứu Order, OrderLine
-                        .requestMatchers("/products", "/products/detail/**").hasAnyRole("CUSTOMER", "ADMIN")
-                        .requestMatchers("/products/add", "/products/edit/**", "/products/update/**").hasRole("ADMIN")
+                        // Customer: xem chi tiết Product, mua Product, Lưu Order, tra cứu Order, OrderLine
+                        .requestMatchers("/products/view/**").hasAnyRole("CUSTOMER", "ADMIN")
+                        .requestMatchers("/products/*/comments").hasAnyRole("CUSTOMER", "ADMIN")
+                        .requestMatchers("/orders/**").hasAnyRole("CUSTOMER", "ADMIN")
                         
                         // Admin: quản trị hệ thống có đầy đủ các chức năng quản trị Customer, Product
+                        .requestMatchers("/products/add", "/products/edit/**", "/products/save", "/products/delete/**").hasRole("ADMIN")
+                        .requestMatchers("/customers/**").hasRole("ADMIN")
+                        
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/products")
+                        .defaultSuccessUrl("/products", true)
                         .permitAll()
                 )
                 .logout(logout -> logout
