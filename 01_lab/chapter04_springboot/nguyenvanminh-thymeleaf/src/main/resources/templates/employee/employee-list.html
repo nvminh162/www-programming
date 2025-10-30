@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Danh Sách Nhân Viên</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <h2>Nguyen Van Minh - 22003405 - Danh Sách Nhân Viên</h2>
+                <a href="/employees/create" class="btn btn-primary mb-3">Thêm Nhân Viên</a>
+                <a href="/departments" class="btn btn-secondary mb-3">Danh Sách Phòng Ban</a>
+                
+                <!-- Search Form -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Tìm Kiếm Nhân Viên</h5>
+                        <form method="GET" action="/employees" class="row g-3">
+                            <div class="col-md-3">
+                                <label for="searchName" class="form-label">Tìm theo tên:</label>
+                                <input type="text" class="form-control" id="searchName" name="searchName" 
+                                       th:value="${searchName}" placeholder="Nhập tên nhân viên...">
+                            </div>
+                            <div class="col-md-2">
+                                <label for="searchAge" class="form-label">Tìm theo tuổi:</label>
+                                <input type="number" class="form-control" id="searchAge" name="searchAge" 
+                                       th:value="${searchAge}" placeholder="Nhập tuổi..." min="18" max="65">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="departmentId" class="form-label">Tìm theo phòng ban:</label>
+                                <select class="form-control" id="departmentId" name="departmentId">
+                                    <option value="">-- Chọn phòng ban --</option>
+                                    <option th:each="dept : ${departments}" 
+                                            th:value="${dept.id}" 
+                                            th:selected="${dept.id == departmentId}"
+                                            th:text="${dept.name}">
+                                        Department Name
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="salaryRange" class="form-label">Tìm theo lương:</label>
+                                <div class="row g-1">
+                                    <div class="col-6">
+                                        <input type="number" class="form-control form-control-sm" id="salaryFrom" 
+                                               name="salaryFrom" th:value="${salaryFrom}" placeholder="Từ..." 
+                                               min="0">
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="number" class="form-control form-control-sm" id="salaryTo" 
+                                               name="salaryTo" th:value="${salaryTo}" placeholder="Đến..." 
+                                               min="0">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">&nbsp;</label>
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-success">Tìm kiếm</button>
+                                    <a href="/employees" class="btn btn-outline-secondary">Xóa bộ lọc</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div th:if="${not #lists.isEmpty(employees)}">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Tên</th>
+                                <th>Email</th>
+                                <th>Tuổi</th>
+                                <th>Lương</th>
+                                <th>Trạng thái</th>
+                                <th>Phòng Ban</th>
+                                <th>Thao Tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="employee, iterStat : ${employees}">
+                                <td th:text="${iterStat.index + 1}">1</td>
+                                <td th:text="${employee.name}">Employee Name</td>
+                                <td th:text="${employee.email}">email@example.com</td>
+                                <td th:text="${employee.age} + ' tuổi'">25 tuổi</td>
+                                <td th:text="${#numbers.formatInteger(employee.salary, 0, 'COMMA')} + '₫'">1,000,000₫</td>
+                                <td>
+                                    <span th:if="${employee.status == 1}" class="badge bg-success">Hoạt động</span>
+                                    <span th:unless="${employee.status == 1}" class="badge bg-secondary">Không hoạt động</span>
+                                </td>
+                                <td>
+                                    <span th:if="${employee.department != null}" th:text="${employee.department.name}">Department Name</span>
+                                    <span th:if="${employee.department == null}">Chưa phân công</span>
+                                </td>
+                                <td>
+                                    <a th:href="@{/employees/{id}(id=${employee.id})}" class="btn btn-sm btn-info">Xem</a>
+                                    <a th:href="@{/employees/{id}/update(id=${employee.id})}" class="btn btn-sm btn-warning">Sửa</a>
+                                    <form method="POST" th:action="@{/employees/{id}/delete(id=${employee.id})}" style="display: inline;">
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa?')">Xóa</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div th:if="${#lists.isEmpty(employees)}">
+                    <div class="alert alert-info">
+                        <span th:if="${hasSearchCriteria}">
+                            Không tìm thấy nhân viên nào phù hợp với tiêu chí tìm kiếm. 
+                            <a href="/employees">Xem tất cả nhân viên</a>
+                        </span>
+                        <span th:unless="${hasSearchCriteria}">
+                            Chưa có nhân viên nào. <a href="/employees/create">Thêm nhân viên đầu tiên</a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

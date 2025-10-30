@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Form Phòng Ban</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <h2>
+                    <span th:if="${department.id != null}">Cập Nhật Phòng Ban</span>
+                    <span th:if="${department.id == null}">Thêm Phòng Ban Mới</span>
+                </h2>
+                <a href="/departments" class="btn btn-secondary mb-3">Quay lại</a>
+
+                <form method="POST" th:action="${department.id != null} ? @{/departments/{id}(id=${department.id})} : @{/departments}">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Tên Phòng Ban</label>
+                        <input type="text" class="form-control" id="name" name="name" 
+                               th:value="${department.name}" required placeholder="Nhập tên phòng ban">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <span th:if="${department.id != null}">Cập Nhật</span>
+                        <span th:if="${department.id == null}">Thêm Mới</span>
+                    </button>
+                    <a href="/departments" class="btn btn-secondary">Hủy</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

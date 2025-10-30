@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">Shopping DB</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                        <a class="nav-link" href="/customers">Customers</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/products">Products</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasAnyRole('CUSTOMER', 'ADMIN')">
+                        <a class="nav-link" href="/orders">Orders</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <!-- Guest - Chưa đăng nhập -->
+                    <li class="nav-item" sec:authorize="!isAuthenticated()">
+                        <a class="nav-link" href="/login">
+                            <button class="btn btn-outline-light btn-sm">Login</button>
+                        </a>
+                    </li>
+                    <!-- Đã đăng nhập -->
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <span class="nav-link">
+                            Welcome, <strong sec:authentication="name"></strong>
+                            <span class="badge bg-primary" sec:authentication="principal.authorities"></span>
+                        </span>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <form th:action="@{/logout}" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h2>Products List</h2>
+        
+        <!-- Thông báo cho Guest -->
+        <div class="alert alert-info" sec:authorize="!isAuthenticated()">
+            <strong>Guest Mode:</strong> Bạn đang xem với quyền Guest. 
+            <a href="/login">Đăng nhập</a> để xem chi tiết sản phẩm và đặt hàng.
+        </div>
+        
+        <!-- Nút Add Product chỉ cho Admin -->
+        <div sec:authorize="hasRole('ADMIN')" class="mb-3">
+            <a th:href="@{/products/add}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Add New Product
+            </a>
+        </div>
+        
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>In Stock</th>
+                    <th>Category</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="product : ${products}">
+                    <td th:text="${product.id}"></td>
+                    <td th:text="${product.name}"></td>
+                    <td th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' VND'"></td>
+                    <td>
+                        <span th:if="${product.inStock}" class="badge bg-success">Yes</span>
+                        <span th:unless="${product.inStock}" class="badge bg-danger">No</span>
+                    </td>
+                    <td th:text="${product.category != null ? product.category.name : 'N/A'}"></td>
+                    <td>
+                        <!-- View - Customer & Admin only -->
+                        <a sec:authorize="hasAnyRole('CUSTOMER', 'ADMIN')" 
+                           th:href="@{/products/view/{id}(id=${product.id})}" 
+                           class="btn btn-info btn-sm">View</a>
+                        
+                        <!-- Login required for Guest -->
+                        <a sec:authorize="!isAuthenticated()" 
+                           href="/login" 
+                           class="btn btn-secondary btn-sm">Login to View</a>
+                        
+                        <!-- Edit & Delete - Admin only -->
+                        <span sec:authorize="hasRole('ADMIN')">
+                            <a th:href="@{/products/edit/{id}(id=${product.id})}" class="btn btn-warning btn-sm">Edit</a>
+                            <a th:href="@{/products/delete/{id}(id=${product.id})}" class="btn btn-danger btn-sm" 
+                               onclick="return confirm('Are you sure?')">Delete</a>
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
