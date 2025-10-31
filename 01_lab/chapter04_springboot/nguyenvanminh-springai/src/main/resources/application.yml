@@ -1,0 +1,42 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: spring-ai-flight
+  datasource:
+    url: jdbc:postgresql://localhost:5432/flightdb
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: root
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+  ai:
+    openai:
+      api-key: 
+      chat:
+        base-url: https://generativelanguage.googleapis.com
+        completions-path: /v1beta/openai/chat/completions
+        options:
+          model: gemini-2.0-flash
+          temperature: 0.8
+          max-tokens: 1000
+    chat:
+      memory:
+        repository:
+          jdbc:
+            initialize-schema: always
+    vectorstore:
+      qdrant:
+        endpoint: http://localhost:6333
+        collection-name: flight-assistant
