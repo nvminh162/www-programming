@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: nguyenvanminh-bai01-project-management
+  datasource:
+    url: jdbc:mariadb://localhost:3307/final_exam_bai01
+    username: root
+    password: root
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update

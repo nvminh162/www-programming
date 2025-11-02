@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Nguyen Van Minh - 01 - Project List</title>
+    <style>
+        th, td {
+            width: calc(100% / 7);
+        }
+    </style>
+</head>
+<body>
+<h1>
+    Nguyen Van Minh - 22003405
+</h1>
+<p>
+    Project List Page, [Xin chào: <span th:text="${name}">user</span>, Role: <span th:text="${roleName}">role</span>]
+</p>
+
+<form th:action="@{/logout}" method="post">
+    <button type="submit">Logout</button>
+</form>
+
+<hr/>
+
+<div th:if="${roleName.contains('ADMIN')}">
+    <a th:href="@{/projects/form}">New project</a>
+</div>
+
+<table border="1" style="width: 80%">
+    <tr>
+        <td>ID</td>
+        <td>Name</td>
+        <td>Description</td>
+        <td>Start Date</td>
+        <td>Due Date</td>
+        <td>Budget</td>
+        <td>Action</td>
+    </tr>
+    <tr th:each="project : ${projects}">
+        <td th:text="${project.id}"></td>
+        <td th:text="${project.name}"></td>
+        <td th:text="${project.description}"></td>
+        <td th:text="${project.startDate}"></td>
+        <td th:text="${project.dueDate}"></td>
+        <td th:text="${project.budget}"></td>
+        <td>
+            <a th:href="@{/projects/form(id=${project.id})}">Cập nhật</a>
+            <form th:action="@{/projects/delete/{id}(id=${project.id})}" method="post">
+                <button type="submit">Xoá</button>
+            </form>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>
