@@ -1,10 +1,10 @@
-package com.nvminh162.shopping;
+package com.nvminh162.course;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class NguyenvanminhBai03ShoppingManagementApplicationTests {
+class CourseApplicationTests {
 
     @Test
     void contextLoads() {

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Course List Page</h1>
+<h3>Nguyen Van Minh - 22003405</h3>
+<h3>Xin chào, <span th:text="${name}"></span>, vai trò: <span th:text="${roleName}"></span></h3>
+<div>
+    <a th:href="@{/courses}">Quay lại</a>
+</div>
+<hr>
+<form th:action="@{/courses}" method="post" th:object="${course}">
+    <div th:if="${course.id != null}">
+        <input th:field="*{id}" type="hidden"/>
+    </div>
+
+    <div>
+        <label>className</label>
+        <input th:field="*{className}"/>
+    </div>
+
+    <div>
+        <label>subject</label>
+        <input th:field="*{subject}"/>
+    </div>
+
+    <div>
+        <label>noOfStudents</label>
+        <input th:field="*{noOfStudents}" type="number"/>
+    </div>
+
+    <div>
+        <label>startDate</label>
+        <input th:field="*{startDate}" type="date"/>
+    </div>
+
+    <div>
+        <label>endDate</label>
+        <input th:field="*{endDate}" type="date"/>
+    </div>
+
+    <button type="submit">Save</button>
+</form>
+</body>
+</html>
