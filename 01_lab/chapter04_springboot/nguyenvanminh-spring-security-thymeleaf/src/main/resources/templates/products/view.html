@@ -58,7 +58,7 @@
         <h4>Add Comment</h4>
         <form th:action="@{/products/{id}/comments(id=${product.id})}" method="post">
             <div class="mb-3">
-                <textarea class="form-control" name="text" rows="3" placeholder="Enter your comment" required></textarea>
+                <textarea class="form-control" name="text" rows="3" placeholder="Enter your comment"></textarea>
             </div>
             <button type="submit" class="btn btn-primary">Add Comment</button>
         </form>

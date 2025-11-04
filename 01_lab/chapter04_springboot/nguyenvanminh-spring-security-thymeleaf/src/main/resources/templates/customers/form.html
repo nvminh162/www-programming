@@ -37,7 +37,26 @@
             
             <div class="mb-3">
                 <label for="name" class="form-label">Customer Name:</label>
-                <input type="text" class="form-control" id="name" th:field="*{name}" required>
+                <input type="text" class="form-control" id="name" 
+                       th:field="*{name}" 
+                       th:class="${#fields.hasErrors('name')} ? 'form-control is-invalid' : 'form-control'">
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" class="form-control" id="email" 
+                       th:field="*{email}" 
+                       th:class="${#fields.hasErrors('email')} ? 'form-control is-invalid' : 'form-control'">
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="customerSince" class="form-label">Customer Since:</label>
+                <input type="date" class="form-control" id="customerSince" 
+                       th:field="*{customerSince}" 
+                       th:class="${#fields.hasErrors('customerSince')} ? 'form-control is-invalid' : 'form-control'">
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('customerSince')}" th:errors="*{customerSince}"></div>
             </div>
             
             <button type="submit" class="btn btn-primary">Save</button>

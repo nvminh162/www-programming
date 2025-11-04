@@ -60,7 +60,14 @@ public class OrderController {
                            @RequestParam Integer[] amounts) {
         
         Order order = new Order();
-        order.setDate(Calendar.getInstance());
+        
+        // Set date to today (start of day) - Order date is always today
+        Calendar today = Calendar.getInstance();
+        today.set(Calendar.HOUR_OF_DAY, 0);
+        today.set(Calendar.MINUTE, 0);
+        today.set(Calendar.SECOND, 0);
+        today.set(Calendar.MILLISECOND, 0);
+        order.setDate(today);
         
         customerService.getCustomerById(customerId).ifPresent(order::setCustomer);
         
@@ -68,7 +75,7 @@ public class OrderController {
             Integer productId = productIds[i];
             Integer amount = amounts[i];
             
-            if (amount > 0) {
+            if (amount != null && amount > 0) {
                 productService.getProductById(productId).ifPresent(product -> {
                     OrderLine orderLine = new OrderLine();
                     orderLine.setProduct(product);
@@ -77,6 +84,15 @@ public class OrderController {
                     order.addOrderLine(orderLine);
                 });
             }
+        }
+        
+        // Validate order before saving
+        if (order.getCustomer() == null) {
+            return "redirect:/orders/add?error=customer";
+        }
+        
+        if (order.getOrderLines().isEmpty()) {
+            return "redirect:/orders/add?error=products";
         }
         
         orderService.saveOrder(order);

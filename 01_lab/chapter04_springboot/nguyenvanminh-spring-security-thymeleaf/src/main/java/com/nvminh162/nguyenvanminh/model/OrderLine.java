@@ -1,6 +1,8 @@
 package com.nvminh162.nguyenvanminh.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -26,6 +28,8 @@ public class OrderLine {
     @ToString.Exclude
     private Product product;
     
+    @NotNull(message = "Số lượng không được để trống")
+    @Min(value = 1, message = "Số lượng phải là số lớn hơn 0")
     private Integer amount;
     
     private BigDecimal purchasePrice;

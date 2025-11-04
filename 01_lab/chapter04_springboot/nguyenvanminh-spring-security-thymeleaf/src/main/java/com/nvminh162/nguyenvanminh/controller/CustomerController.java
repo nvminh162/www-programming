@@ -2,9 +2,11 @@ package com.nvminh162.nguyenvanminh.controller;
 
 import com.nvminh162.nguyenvanminh.model.Customer;
 import com.nvminh162.nguyenvanminh.service.CustomerService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Calendar;
@@ -37,7 +39,10 @@ public class CustomerController {
     }
     
     @PostMapping("/save")
-    public String saveCustomer(@ModelAttribute Customer customer) {
+    public String saveCustomer(@Valid @ModelAttribute Customer customer, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "customers/form";
+        }
         if (customer.getCustomerSince() == null) {
             customer.setCustomerSince(Calendar.getInstance());
         }

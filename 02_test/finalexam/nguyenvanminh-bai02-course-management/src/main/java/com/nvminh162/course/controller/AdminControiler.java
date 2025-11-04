@@ -1,5 +1,3 @@
-package com.nvminh162.course.controller;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

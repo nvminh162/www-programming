@@ -5,10 +5,12 @@ import com.nvminh162.nguyenvanminh.model.Product;
 import com.nvminh162.nguyenvanminh.service.CategoryService;
 import com.nvminh162.nguyenvanminh.service.CommentService;
 import com.nvminh162.nguyenvanminh.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -50,7 +52,12 @@ public class ProductController {
     
     @PostMapping("/save")
     @PreAuthorize("hasRole('ADMIN')")
-    public String saveProduct(@ModelAttribute Product product, @RequestParam(required = false) Integer categoryId) {
+    public String saveProduct(@Valid @ModelAttribute Product product, BindingResult bindingResult,
+                             @RequestParam(required = false) Integer categoryId, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("categories", categoryService.getAllCategories());
+            return "products/form";
+        }
         if (categoryId != null) {
             categoryService.getCategoryById(categoryId).ifPresent(product::setCategory);
         }

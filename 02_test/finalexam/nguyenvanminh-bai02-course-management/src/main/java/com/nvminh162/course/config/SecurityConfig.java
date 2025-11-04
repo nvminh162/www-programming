@@ -1,5 +1,3 @@
-package com.nvminh162.course.config;
-
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,20 +21,6 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        UserDetails member = User
-                .builder()
-                .username("member")
-                .password(passwordEncoder().encode("123"))
-                .roles("MEMBER")
-                .build();
-
-        UserDetails teacher = User
-                .builder()
-                .username("teacher")
-                .password(passwordEncoder().encode("123"))
-                .roles("TEACHER")
-                .build();
-
         UserDetails admin = User
                 .builder()
                 .username("admin")
@@ -44,7 +28,7 @@ public class SecurityConfig {
                 .roles("ADMIN")
                 .build();
 
-        return new InMemoryUserDetailsManager(member, teacher, admin);
+        return new InMemoryUserDetailsManager(admin);
     }
 
     @Bean
@@ -55,7 +39,7 @@ public class SecurityConfig {
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
-                .formLogin(login -> login.defaultSuccessUrl("/courses", true))
+                .formLogin(login -> login.defaultSuccessUrl("/url", true))
                 .logout(logout -> logout.logoutSuccessUrl("/login"))
                 .build();
     }
