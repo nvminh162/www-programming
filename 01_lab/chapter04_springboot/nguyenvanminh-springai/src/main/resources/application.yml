@@ -23,7 +23,7 @@ spring:
       max-request-size: 50MB
   ai:
     openai:
-      api-key: AIzaSyDx2x9umY9O94e-EvKDUsJV0Yibmyy2lqw
+      api-key: 
       chat:
         base-url: https://generativelanguage.googleapis.com
         completions-path: /v1beta/openai/chat/completions
